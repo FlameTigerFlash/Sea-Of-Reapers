@@ -14,5 +14,9 @@ public class MainInstaller : MonoInstaller
         .To<CustomEnemyFactory>()
         .AsSingle()
         .WithArguments(_enemyPrefab);
+
+        SignalBusInstaller.Install(Container);
+        Container.DeclareSignal<PlayerDiedSignal>();
+        Container.DeclareSignal<PlayerFoundSignal>();
     }
 }

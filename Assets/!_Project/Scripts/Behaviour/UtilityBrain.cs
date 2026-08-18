@@ -38,10 +38,7 @@ public class UtilityBrain : MonoBehaviour, IStrategy
             _lastDecisionTime = Time.time;
             PickNewAction();
         }
-        if (_curAction != null)
-        {
-            _curAction.Process(context);
-        }
+        _curAction?.Process(context);
     }
 
     private void PickNewAction()
@@ -50,13 +47,13 @@ public class UtilityBrain : MonoBehaviour, IStrategy
         {
             return;
         }
-        float bestVal = float.PositiveInfinity;
+        float bestVal = float.NegativeInfinity;
         BaseAIAction bestAction = null;
 
         foreach (var action in _actions)
         {
             float curVal = action.OnEvaluate(_context);
-            if (curVal < bestVal)
+            if (curVal > bestVal)
             {
                 bestVal = curVal;
                 bestAction = action;

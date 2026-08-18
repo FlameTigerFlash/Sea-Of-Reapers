@@ -6,6 +6,7 @@ using Zenject;
 
 public class PlayerContextHandler : MonoBehaviour
 {
+    #region fields
     [SerializeField, NotNull] private CharacterHP _healthSystem;
 
     [SerializeField, NotNull] private DeathHandler _deathHandler;
@@ -26,6 +27,9 @@ public class PlayerContextHandler : MonoBehaviour
 
     private AimingController _aimingController;
 
+    private SignalBus _signalBus;
+    #endregion
+
     private void OnValidate()
     {
         _healthSystem = _healthSystem != null ? _healthSystem : GetComponentInChildren<CharacterHP>();
@@ -43,12 +47,23 @@ public class PlayerContextHandler : MonoBehaviour
         SetupComponents();
     }
 
+    private void Start()
+    {
+        _signalBus.TryFire<PlayerFoundSignal>(new PlayerFoundSignal {Player=gameObject});
+    }
+
     private void Update()
     {
         foreach (var controller in _controllers)
         {
             controller.UpdateControls();
         }
+    }
+
+    [Inject]
+    public void Construct(SignalBus signalBus)
+    {
+        _signalBus = signalBus;
     }
 
     private void SetupFields()
@@ -77,6 +92,7 @@ public class PlayerContextHandler : MonoBehaviour
 
     private void HandleDeath()
     {
+        _signalBus.TryFire<PlayerDiedSignal>();
         _deathHandler.OnHandleDeath();
     }
 }

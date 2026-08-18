@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     private MapLocator _mapLocator;
 
+    private SignalBus _signalBus;
+
     private bool _gameOver = false;
 
     private void Update()
@@ -27,24 +29,14 @@ public class GameManager : MonoBehaviour
     }
 
     [Inject]
-    public void Construct(MapLocator locator, WaveManager waveManager)
+    public void Construct(MapLocator locator, WaveManager waveManager, SignalBus signalBus)
     {
         _mapLocator = locator;
-        _mapLocator.PlayerListener.ValueChangedEvent += OnPlayerFound;
 
         _waveManager = waveManager;
-    }
 
-    public void OnPlayerFound(GameObject player)
-    {
-        var deathHandler = player.GetComponentInChildren<DeathHandler>();
-        if (deathHandler == null)
-        {
-            Debug.LogError("Player must have a Death Handler component.");
-            return;
-        }
-
-        deathHandler.DeathEvent.AddListener(OnPlayerDied);
+        _signalBus = signalBus;
+        _signalBus.Subscribe<PlayerDiedSignal>(OnPlayerDied);
     }
 
     public void OnPlayerDied()

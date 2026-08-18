@@ -7,22 +7,20 @@ public class PlayerInfoPresenter : MonoBehaviour
     [SerializeField] private HealthDisplay _healthDisplay;
     [SerializeField] private AimingDisplay _aimingDisplay;
 
-    [Inject] private MapLocator _mapLocator;
-    [Inject] private ScoreManager _scoreManager;
+    private SignalBus _signalBus;
+    private ScoreManager _scoreManager;
 
     private PlayerContext _playerContext;
     private CharacterHP _playerHp;
 
-    private void Awake()
+    private void Start()
     {
         _scoreManager.ScoreChangedEvent.AddListener(OnScoreChanged);
-        _mapLocator.PlayerListener.ValueChangedEvent += OnPlayerFound;
     }
 
     private void OnDestroy()
     {
         _scoreManager.ScoreChangedEvent.RemoveListener(OnScoreChanged);
-        _mapLocator.PlayerListener.ValueChangedEvent -= OnPlayerFound;
         if (_playerHp != null)
         {
             _playerHp.HPListener.ValueChangedEvent -= OnHealthChanged;
@@ -34,8 +32,19 @@ public class PlayerInfoPresenter : MonoBehaviour
         }
     }
 
-    public void OnPlayerFound(GameObject player)
+    [Inject]
+    public void Construct(ScoreManager scoreManager, SignalBus signalBus)
     {
+        _scoreManager = scoreManager;
+        _signalBus = signalBus;
+
+        _signalBus.Subscribe<PlayerFoundSignal>(OnPlayerFound);
+        _signalBus.Subscribe<PlayerDiedSignal>(OnPlayerDied);
+    }
+
+    public void OnPlayerFound(PlayerFoundSignal sig)
+    {
+        var player = sig.Player;
         _playerHp = player.GetComponentInChildren<CharacterHP>();
         if (_playerHp != null)
         {
@@ -48,6 +57,11 @@ public class PlayerInfoPresenter : MonoBehaviour
         {
             _playerContext.AimingStickPosition.ValueChangedEvent += OnAimingPosChanged;
         }
+    }
+
+    public void OnPlayerDied()
+    {
+        _aimingDisplay.Hide();
     }
 
     public void OnAimingPosChanged(Vector2 pos)
