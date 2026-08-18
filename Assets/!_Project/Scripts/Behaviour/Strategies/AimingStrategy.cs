@@ -21,7 +21,7 @@ public class AimingStrategy : IStrategy
         _cannon = _enemyContext.Cannon;
     }
 
-    public void Update(EnemyContext context)
+    public void Process(EnemyContext context)
     {
         Vector3 targetPos = _targetObject.Value.transform.position;
         Vector3 shootDirection = _cannon.AimToTarget(targetPos);

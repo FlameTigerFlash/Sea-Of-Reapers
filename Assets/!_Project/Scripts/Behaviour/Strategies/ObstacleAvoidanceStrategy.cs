@@ -52,7 +52,7 @@ public class ObstacleAvoidanceStrategy : IStrategy
         _lastCalculationTime = Time.time;
     }
 
-    public void Update(EnemyContext context)
+    public void Process(EnemyContext context)
     {
         if (_lastCalculationTime + CalculationInterval <= Time.time)
         {

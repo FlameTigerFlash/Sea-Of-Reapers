@@ -6,6 +6,7 @@ using Zenject.SpaceFighter;
 
 public class EnemyContextHandler : MonoBehaviour
 {
+    [SerializeField, NotNull] private UtilityBrain _brain;
     [SerializeField, NotNull] private Engine _mainEngine;
     [SerializeField, NotNull] private Rotor _mainEngineRotor;
     [SerializeField, NotNull] private Radar _radar;
@@ -28,7 +29,6 @@ public class EnemyContextHandler : MonoBehaviour
     private readonly List<IUpdateControls> _controllers = new();
 
     private EngineController _engineController;
-    private UtilityBrain _brain;
 
     private void Start()
     {
@@ -90,7 +90,7 @@ public class EnemyContextHandler : MonoBehaviour
 
     private void ProcessControls()
     {
-        _brain.Decide();
+        _brain.Process(_context);
 
         foreach (var controller in _controllers)
         {
@@ -124,8 +124,7 @@ public class EnemyContextHandler : MonoBehaviour
                 HandleDeath();
             }
         };
-
-        _brain = new UtilityBrain(Context);
+        _brain.Initialize(_context);
     }
 
     private void HandleDeath()

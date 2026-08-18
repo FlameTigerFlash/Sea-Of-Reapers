@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6397939643410302295}
   - component: {fileID: 1953477706587488701}
   - component: {fileID: 2787021431117500693}
+  - component: {fileID: 3587564300453669742}
   m_Layer: 0
   m_Name: EnemyGunboat
   m_TagString: Untagged
@@ -103,6 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641afe71ed7482d46839d4b32606ab92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContextHandler
+  _brain: {fileID: 3587564300453669742}
   _mainEngine: {fileID: 8414993654063405981}
   _mainEngineRotor: {fileID: 6556777056649369355}
   _radar: {fileID: 3911285485337271532}
@@ -136,6 +138,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1641d1f7ec89ef4eb3ef5a875eba5e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathHandler
+  DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &3587564300453669742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906509281762096340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2672a4e98525d5546820f7d7a9821c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UtilityBrain
+  _actionsConfig: {fileID: 11400000, guid: 8c0419db0ad6f1f44a25ff9f6aa6a402, type: 2}
+  _decisionDelay: 3
 --- !u!1 &2388420889145277514
 GameObject:
   m_ObjectHideFlags: 0

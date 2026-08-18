@@ -56,7 +56,7 @@ public class WaveManager : MonoBehaviour
                 }
                 if (cnt == curChoice)
                 {
-                    used[i] = false;
+                    used[i] = true;
                     _spawners[i].SpawnEnemy();
                 }
                 cnt++;

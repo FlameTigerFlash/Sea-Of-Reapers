@@ -21,7 +21,7 @@ public class WaypointReachingStrategy : IStrategy
         _directionField = _enemyContext.ThrustDirection;
     }
 
-    public void Update(EnemyContext context)
+    public void Process(EnemyContext context)
     {
         Vector3 targetPos = _targetPositionField.Value, selfPos = _gameObject.transform.position;
         targetPos.y = 0;

@@ -1,41 +1,71 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class UtilityBrain
+public class UtilityBrain : MonoBehaviour, IStrategy
 {
-    private readonly EnemyContext _enemyContext;
+    [SerializeField] private ActionsConfig _actionsConfig;
 
-    private readonly GameObject _gameObject;
+    [SerializeField, Min(0f)] private float _decisionDelay = 3f;
 
-    private readonly ReactiveListener<GameObject> _targetListener;
-    private readonly ReactiveField<Vector3> _targetPositionField;
+    private EnemyContext _context;
 
-    private IStrategy _waypointReachingStrategy;
-    private IStrategy _obstacleAvoidanceStrategy;
-    private IStrategy _aimingStrategy;
+    private BaseAIAction _curAction = null;
 
-    public UtilityBrain(EnemyContext context)
+    private List<BaseAIAction> _actions = new();
+
+    private float _lastDecisionTime = float.NegativeInfinity;
+
+    private void Awake()
     {
-        _enemyContext = context;
-
-        _gameObject = _enemyContext.SelfObject;
-
-        _targetListener = _enemyContext.TargetObject;
-        _targetPositionField = _enemyContext.WaypointPosition;
-
-        _waypointReachingStrategy = new WaypointReachingStrategy(); _waypointReachingStrategy.Initialize(context);
-        _obstacleAvoidanceStrategy = new ObstacleAvoidanceStrategy(); _obstacleAvoidanceStrategy.Initialize(context);
-        _aimingStrategy = new AimingStrategy(); _aimingStrategy.Initialize(context);
+        _actions = _actionsConfig.GetActions();
     }
 
-    public void Decide()
+    public void Initialize(EnemyContext context)
     {
-        if (_targetListener == null || _targetListener.Value == null)
+        foreach (var action in _actions)
+        {
+            action.Initialize(context);
+        }
+        _context = context;
+        PickNewAction();
+    }
+
+    public void Process(EnemyContext context)
+    {
+        if (Time.time - _lastDecisionTime >= _decisionDelay)
+        {
+            _lastDecisionTime = Time.time;
+            PickNewAction();
+        }
+        if (_curAction != null)
+        {
+            _curAction.Process(context);
+        }
+    }
+
+    private void PickNewAction()
+    {
+        if (_context == null)
         {
             return;
         }
+        float bestVal = float.PositiveInfinity;
+        BaseAIAction bestAction = null;
 
-        _obstacleAvoidanceStrategy.Update(_enemyContext);
-        _waypointReachingStrategy.Update(_enemyContext);
-        _aimingStrategy.Update(_enemyContext);
+        foreach (var action in _actions)
+        {
+            float curVal = action.OnEvaluate(_context);
+            if (curVal < bestVal)
+            {
+                bestVal = curVal;
+                bestAction = action;
+            }
+        }
+
+        if (bestAction != null)
+        {
+            _curAction = bestAction;
+        }
     }
 }
