@@ -14,12 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ForceProcessorConfig
   ForcePreprocessors: []
   ForceProcessor:
-    rid: 320122956022284810
+    rid: 320123294810898433
+  ForcePostprocessors: []
   references:
     version: 2
     RefIds:
-    - rid: 320122956022284810
-      type: {class: LimitedVelocityArchimedesForceProcessor, ns: , asm: Assembly-CSharp}
-      data:
-        _maxSupportedVerticalSpeed: 5
-        _distanceErrorThreshold: 0.01
+    - rid: 320123294810898433
+      type: {class: DummyForceProcessor, ns: WaterPhysics, asm: Assembly-CSharp}
+      data: 

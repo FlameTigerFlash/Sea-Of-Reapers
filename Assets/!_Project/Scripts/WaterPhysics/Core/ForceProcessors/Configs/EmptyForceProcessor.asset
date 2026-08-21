@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ForceProcessorConfig
   ForcePreprocessors: []
   ForceProcessor:
-    rid: 320122956022284841
+    rid: 320123294810898434
+  ForcePostprocessors: []
   references:
     version: 2
     RefIds:
-    - rid: 320122956022284841
-      type: {class: DummyForceProcessor, ns: , asm: Assembly-CSharp}
+    - rid: 320123294810898434
+      type: {class: DummyForceProcessor, ns: WaterPhysics, asm: Assembly-CSharp}
       data: 

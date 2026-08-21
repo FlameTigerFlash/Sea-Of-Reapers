@@ -1,98 +1,102 @@
+using Character;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using Zenject;
 
-public class PlayerContextHandler : MonoBehaviour
+namespace Character.Player
 {
-    #region fields
-    [SerializeField, NotNull] private CharacterHP _healthSystem;
-
-    [SerializeField, NotNull] private DeathHandler _deathHandler;
-
-    [SerializeField, NotNull] private PlayerMovementController _movementController;
-
-    [SerializeField, NotNull] private PlayerInputHandler _inputHandler;
-
-    [SerializeField, NotNull] private PlayerCannonController _cannonController;
-
-    [SerializeField, NotNull] private PlayerMainCameraController _mainCamController;
-
-    public PlayerContext Context => _context;
-
-    private PlayerContext _context;
-
-    private readonly List<IUpdateControls> _controllers = new();
-
-    private AimingController _aimingController;
-
-    private SignalBus _signalBus;
-    #endregion
-
-    private void OnValidate()
+    public class PlayerContextHandler : MonoBehaviour
     {
-        _healthSystem = _healthSystem != null ? _healthSystem : GetComponentInChildren<CharacterHP>();
-        _deathHandler = _deathHandler != null ? _deathHandler : GetComponentInChildren<DeathHandler>();
-        _movementController = _movementController != null ? _movementController : GetComponentInChildren<PlayerMovementController>();
-        _inputHandler = _inputHandler != null ? _inputHandler : GetComponentInChildren<PlayerInputHandler>();
-        _cannonController = _cannonController != null ? _cannonController : GetComponentInChildren<PlayerCannonController>();
-        _mainCamController = _mainCamController != null ? _mainCamController : GetComponentInChildren<PlayerMainCameraController>();
-    }
+        #region fields
+        [SerializeField, NotNull] private CharacterHP _healthSystem;
 
-    private void Awake()
-    {
-        _context = new(gameObject);
-        SetupFields();
-        SetupComponents();
-    }
+        [SerializeField, NotNull] private DeathHandler _deathHandler;
 
-    private void Start()
-    {
-        _signalBus.TryFire<PlayerFoundSignal>(new PlayerFoundSignal {Player=gameObject});
-    }
+        [SerializeField, NotNull] private PlayerMovementController _movementController;
 
-    private void Update()
-    {
-        foreach (var controller in _controllers)
+        [SerializeField, NotNull] private PlayerInputHandler _inputHandler;
+
+        [SerializeField, NotNull] private PlayerCannonController _cannonController;
+
+        [SerializeField, NotNull] private PlayerMainCameraController _mainCamController;
+
+        public PlayerContext Context => _context;
+
+        private PlayerContext _context;
+
+        private readonly List<IUpdateControls> _controllers = new();
+
+        private AimingController _aimingController;
+
+        private SignalBus _signalBus;
+        #endregion
+
+        private void OnValidate()
         {
-            controller.UpdateControls();
+            _healthSystem = _healthSystem != null ? _healthSystem : GetComponentInChildren<CharacterHP>();
+            _deathHandler = _deathHandler != null ? _deathHandler : GetComponentInChildren<DeathHandler>();
+            _movementController = _movementController != null ? _movementController : GetComponentInChildren<PlayerMovementController>();
+            _inputHandler = _inputHandler != null ? _inputHandler : GetComponentInChildren<PlayerInputHandler>();
+            _cannonController = _cannonController != null ? _cannonController : GetComponentInChildren<PlayerCannonController>();
+            _mainCamController = _mainCamController != null ? _mainCamController : GetComponentInChildren<PlayerMainCameraController>();
         }
-    }
 
-    [Inject]
-    public void Construct(SignalBus signalBus)
-    {
-        _signalBus = signalBus;
-    }
-
-    private void SetupFields()
-    {
-        _context.Health = _healthSystem.HPListener;
-    }
-
-    private void SetupComponents()
-    {
-        _context.Health.ValueChangedEvent += (float newHp) =>
+        private void Awake()
         {
-            if (newHp <= 0)
+            _context = new(gameObject);
+            SetupFields();
+            SetupComponents();
+        }
+
+        private void Start()
+        {
+            _signalBus.TryFire<PlayerFoundSignal>(new PlayerFoundSignal { Player = gameObject });
+        }
+
+        private void Update()
+        {
+            foreach (var controller in _controllers)
             {
-                HandleDeath();
+                controller.UpdateControls();
             }
-        };
+        }
 
-        _movementController.Initialize(_context);
-        _inputHandler.Initialize(_context);
-        _cannonController.Initialize(_context);
-        _mainCamController.Initialize(_context);
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
 
-        _aimingController = new(_context);
-        _controllers.Add(_aimingController);
-    }
+        private void SetupFields()
+        {
+            _context.Health = _healthSystem.HPListener;
+        }
 
-    private void HandleDeath()
-    {
-        _signalBus.TryFire<PlayerDiedSignal>();
-        _deathHandler.OnHandleDeath();
+        private void SetupComponents()
+        {
+            _context.Health.ValueChangedEvent += (float newHp) =>
+            {
+                if (newHp <= 0)
+                {
+                    HandleDeath();
+                }
+            };
+
+            _movementController.Initialize(_context);
+            _inputHandler.Initialize(_context);
+            _cannonController.Initialize(_context);
+            _mainCamController.Initialize(_context);
+
+            _aimingController = new(_context);
+            _controllers.Add(_aimingController);
+        }
+
+        private void HandleDeath()
+        {
+            _signalBus.TryFire<PlayerDiedSignal>();
+            _deathHandler.OnHandleDeath();
+        }
     }
 }

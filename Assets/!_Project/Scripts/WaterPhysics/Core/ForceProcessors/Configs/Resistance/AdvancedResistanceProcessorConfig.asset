@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: AdvancedResistanceProcessorConfig
   m_EditorClassIdentifier: Assembly-CSharp::ForceProcessorConfig
   ForcePreprocessors:
-  - rid: 320122956022285140
+  - rid: 320123281129079031
   ForceProcessor:
-    rid: 320122956022284938
+    rid: 320123294810898436
   ForcePostprocessors: []
   references:
     version: 2
     RefIds:
-    - rid: 320122956022284938
-      type: {class: EnergyConservativeResistanceProcessor, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 320122956022285140
-      type: {class: LinearResistanceForceModifier, ns: , asm: Assembly-CSharp}
+    - rid: 320123281129079031
+      type: {class: LinearResistanceForceModifier, ns: WaterPhysics, asm: Assembly-CSharp}
       data:
-        _frontalResistanceCoef: {x: 1, y: 1, z: 0.4}
+        _frontalResistanceCoef: {x: 1, y: 1, z: 0.3}
         _backwardResistanceCoef: {x: 1, y: 1, z: 1}
+    - rid: 320123294810898436
+      type: {class: EnergyConservativeResistanceProcessor, ns: WaterPhysics, asm: Assembly-CSharp}
+      data: 

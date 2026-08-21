@@ -1,32 +1,34 @@
-﻿using System;
+﻿using Character.Enemy;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public class RotationStrategy : IStrategy
+public class RotationStrategy : IContextStrategy
 {
-    private EnemyContext _enemyContext;
+    private ShipContext _enemyContext;
 
     private GameObject _gameObject;
 
-    private ReactiveField<Vector3> _targetPositionField;
+    private ReactiveListener<Vector3> _destinationPosListener;
+
     private ReactiveField<float> _thrustField;
     private ReactiveField<float> _directionField;
 
-    public void Initialize(EnemyContext context)
+    public void Initialize(ShipContext context)
     {
         _enemyContext = context;
 
         _gameObject = _enemyContext.SelfObject;
 
-        _targetPositionField = _enemyContext.WaypointPosition;
+        _destinationPosListener = _enemyContext.MovementDestination;
         _thrustField = _enemyContext.ThrustMultiplier;
         _directionField = _enemyContext.ThrustDirection;
     }
 
-    public void Process(EnemyContext context)
+    public void Process(ShipContext context)
     {
-        Vector3 targetPos = _targetPositionField.Value, selfPos = _gameObject.transform.position;
+        Vector3 targetPos = _destinationPosListener.Value, selfPos = _gameObject.transform.position;
         targetPos.y = 0;
         selfPos.y = 0;
         Vector3 connector = targetPos - selfPos, forwardVector = _gameObject.transform.forward;

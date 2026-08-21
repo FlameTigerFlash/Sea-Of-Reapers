@@ -1,3 +1,4 @@
+using Character.Enemy;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using Zenject;

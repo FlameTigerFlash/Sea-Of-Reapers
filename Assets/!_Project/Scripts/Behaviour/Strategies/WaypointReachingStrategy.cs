@@ -1,8 +1,9 @@
+using Character.Enemy;
 using UnityEngine;
 
-public class WaypointReachingStrategy : IStrategy
+public class WaypointReachingStrategy : IContextStrategy
 {
-    private EnemyContext _enemyContext;
+    private ShipContext _context;
 
     private GameObject _gameObject;
 
@@ -10,19 +11,23 @@ public class WaypointReachingStrategy : IStrategy
     private ReactiveField<float> _thrustField;
     private ReactiveField<float> _directionField;
 
-    public void Initialize(EnemyContext context)
+    public void Initialize(ShipContext context)
     {
-        _enemyContext = context;
+        _context = context;
 
-        _gameObject = _enemyContext.SelfObject;
+        _gameObject = _context.SelfObject;
 
-        _targetPositionField = _enemyContext.WaypointPosition;
-        _thrustField = _enemyContext.ThrustMultiplier;
-        _directionField = _enemyContext.ThrustDirection;
+        _targetPositionField = _context.WaypointPosition;
+        _thrustField = _context.ThrustMultiplier;
+        _directionField = _context.ThrustDirection;
     }
 
-    public void Process(EnemyContext context)
+    public void Process(ShipContext context)
     {
+        if (_gameObject == null || _targetPositionField == null)
+        {
+            return;
+        }
         Vector3 targetPos = _targetPositionField.Value, selfPos = _gameObject.transform.position;
         targetPos.y = 0;
         selfPos.y = 0;

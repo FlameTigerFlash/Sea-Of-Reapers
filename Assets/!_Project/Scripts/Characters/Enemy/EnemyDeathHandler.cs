@@ -1,6 +1,10 @@
+using Character;
 using UnityEngine;
 
-public class EnemyDeathHandler : DeathHandler
+namespace Character.Enemy
 {
+    public class EnemyDeathHandler : DeathHandler
+    {
 
+    }
 }

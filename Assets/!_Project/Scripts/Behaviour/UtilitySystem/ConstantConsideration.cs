@@ -1,15 +1,19 @@
-﻿using System;
+﻿using Character.Enemy;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-[Serializable]
-public class ConstantConsideration : BaseConsideration
+namespace UtilitySystem
 {
-    [SerializeField, Range(0f, 1f)] private float _value = 0f;
-
-    protected override float Evaluate(EnemyContext context)
+    [Serializable]
+    public class ConstantConsideration : BaseConsideration
     {
-        return _value;
+        [SerializeField, Range(0f, 1f)] private float _value = 0f;
+
+        protected override float Evaluate(ShipContext context)
+        {
+            return _value;
+        }
     }
 }

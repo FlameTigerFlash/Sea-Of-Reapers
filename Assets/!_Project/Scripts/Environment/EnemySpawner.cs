@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using System.Collections.Generic;
 using System.Collections;
+using Character.Enemy;
 
 public class EnemySpawner : MonoBehaviour
 {

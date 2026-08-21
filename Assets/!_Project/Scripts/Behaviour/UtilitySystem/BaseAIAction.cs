@@ -1,27 +1,31 @@
 using UnityEngine;
 using System;
+using Character.Enemy;
 
-[Serializable]
-public abstract class BaseAIAction : IStrategy, ICloneable
+namespace UtilitySystem
 {
-    [SerializeReference, SubclassSelector] private BaseConsideration _consideration;
-
-    public BaseAIAction CreateShallowCopy()
+    [Serializable]
+    public abstract class BaseAIAction : IContextStrategy, ICloneable
     {
-        return (BaseAIAction)Clone();
-    }
+        [SerializeReference, SubclassSelector] private BaseConsideration _consideration;
 
-    public virtual float OnEvaluate(EnemyContext context) => _consideration.OnEvaluate(context);
+        public BaseAIAction CreateShallowCopy()
+        {
+            return (BaseAIAction)Clone();
+        }
 
-    public virtual void Initialize(EnemyContext context)
-    {
+        public virtual float OnEvaluate(ShipContext context) => _consideration.OnEvaluate(context);
 
-    }
+        public virtual void Initialize(ShipContext context)
+        {
 
-    public abstract void Process(EnemyContext context);
+        }
 
-    public object Clone()
-    {
-        return MemberwiseClone();
+        public abstract void Process(ShipContext context);
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

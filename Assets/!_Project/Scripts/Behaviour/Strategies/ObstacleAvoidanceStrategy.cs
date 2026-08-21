@@ -2,8 +2,9 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Character.Enemy;
 
-public class ObstacleAvoidanceStrategy : IStrategy
+public class ObstacleAvoidanceStrategy : IContextStrategy
 {
     #region fields
     public float CalculationInterval
@@ -18,7 +19,9 @@ public class ObstacleAvoidanceStrategy : IStrategy
         }
     }
 
-    private EnemyContext _enemyContext;
+    private ShipContext _enemyContext;
+
+    private ReactiveListener<Vector3> _destinationPosListener;
 
     private ReactiveListener<GameObject> _targetGameObject;
     private GameObject _gameObject;
@@ -26,8 +29,6 @@ public class ObstacleAvoidanceStrategy : IStrategy
     private Radar _radar;
 
     private ReactiveField<Vector3> _targetPositionField;
-    private ReactiveListener<float> _thrustField;
-    private ReactiveListener<float> _directionField;
 
     private float _distanceCoef = 1f;
     private float _difficultyCoef = 0f;
@@ -35,25 +36,30 @@ public class ObstacleAvoidanceStrategy : IStrategy
     private float _lastCalculationTime = 0f;
     #endregion
 
-    public void Initialize(EnemyContext context)
+    public void Initialize(ShipContext context)
     {
         _enemyContext = context;
 
-        _targetGameObject = _enemyContext.TargetObject;
+        _destinationPosListener = context.MovementDestination;
+
         _gameObject = _enemyContext.SelfObject;
+        _targetGameObject = _enemyContext.TargetObject;
+
         _rb = _gameObject.GetComponent<Rigidbody>();
 
         _radar = _enemyContext.Radar;
 
         _targetPositionField = _enemyContext.WaypointPosition;
-        _thrustField = _enemyContext.ThrustMultiplier;
-        _directionField = _enemyContext.ThrustDirection;
 
         _lastCalculationTime = Time.time;
     }
 
-    public void Process(EnemyContext context)
+    public void Process(ShipContext context)
     {
+        if (_gameObject == null || _radar == null)
+        {
+            return;
+        }
         if (_lastCalculationTime + CalculationInterval <= Time.time)
         {
             CalculateNewWaypoint();
@@ -81,13 +87,8 @@ public class ObstacleAvoidanceStrategy : IStrategy
 
     private void CalculateNewWaypoint()
     {
-        var targetTransform = _targetGameObject.Value.transform;
+        var targetTransform = _targetGameObject.Value == null? null: _targetGameObject.Value.transform;
         Vector3 selfPos = _gameObject.transform.position; selfPos.y = 0;
-        if (targetTransform == null)
-        {
-            _targetPositionField.Value = selfPos;
-            return;
-        }
 
         var traces = _radar.Traces;
 
@@ -98,7 +99,7 @@ public class ObstacleAvoidanceStrategy : IStrategy
         foreach (var trace in traces)
         {
             var node = trace.Node;
-            if (node.Hits.Length > 0)
+            if (node.Hits.Length > 0 && targetTransform != null)
             {
                 var otherTransform = node.Hits[0].transform;
                 if (otherTransform != null && (otherTransform == targetTransform || otherTransform.IsChildOf(targetTransform)))
@@ -114,7 +115,7 @@ public class ObstacleAvoidanceStrategy : IStrategy
 
                 movementDifficulty.Add(CalculateReachingDifficulty(selfPos, point));
 
-                float totalDist = Vector3.Distance(selfPos, point) + Vector3.Distance(point, targetTransform.position);
+                float totalDist = Vector3.Distance(selfPos, point) + Vector3.Distance(point, _destinationPosListener);
                 distance.Add(totalDist);
             }
         }

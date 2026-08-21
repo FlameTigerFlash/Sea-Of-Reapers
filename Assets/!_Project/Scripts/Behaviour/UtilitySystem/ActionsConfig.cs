@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ActionsConfig", menuName = "Scriptable Objects/UtilitySystem/ActionsConfig")]
-public class ActionsConfig : ScriptableObject
+namespace UtilitySystem
 {
-    [SerializeReference, SubclassSelector] private List<BaseAIAction> _actions;
-
-    public List<BaseAIAction> GetActions()
+    [CreateAssetMenu(fileName = "ActionsConfig", menuName = "Scriptable Objects/UtilitySystem/ActionsConfig")]
+    public class ActionsConfig : ScriptableObject
     {
-        List<BaseAIAction> ret = new();
-        foreach (BaseAIAction action in _actions)
+        [SerializeReference, SubclassSelector] private List<BaseAIAction> _actions;
+
+        public List<BaseAIAction> GetActions()
         {
-            ret.Add(action.CreateShallowCopy());
+            List<BaseAIAction> ret = new();
+            foreach (BaseAIAction action in _actions)
+            {
+                ret.Add(action.CreateShallowCopy());
+            }
+            return ret;
         }
-        return ret;
     }
 }

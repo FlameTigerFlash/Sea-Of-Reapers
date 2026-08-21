@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContextHandler
   _brain: {fileID: 3587564300453669742}
+  _csa: {fileID: 0}
   _mainEngine: {fileID: 8414993654063405981}
   _mainEngineRotor: {fileID: 6556777056649369355}
   _radar: {fileID: 3911285485337271532}

@@ -1,44 +1,22 @@
+using Character.Enemy;
 using System;
 using UnityEngine;
 
-[Serializable]
-public class ChaseAction : BaseAIAction
+namespace UtilitySystem
 {
-    private EnemyContext _enemyContext;
-
-    private GameObject _gameObject;
-
-    private ReactiveListener<GameObject> _targetListener;
-
-    private ReactiveField<Vector3> _targetPositionField;
-
-    private IStrategy _waypointReachingStrategy;
-    private IStrategy _obstacleAvoidanceStrategy;
-    private IStrategy _aimingStrategy;
-
-    public override void Initialize(EnemyContext context)
+    [Serializable]
+    public class ChaseAction : BaseAIAction
     {
-        _enemyContext = context;
+        private ShipContext _context;
 
-        _gameObject = _enemyContext.SelfObject;
-
-        _targetListener = _enemyContext.TargetObject;
-        _targetPositionField = _enemyContext.WaypointPosition;
-
-        _waypointReachingStrategy = new WaypointReachingStrategy(); _waypointReachingStrategy.Initialize(context);
-        _obstacleAvoidanceStrategy = new ObstacleAvoidanceStrategy(); _obstacleAvoidanceStrategy.Initialize(context);
-        _aimingStrategy = new AimingStrategy(); _aimingStrategy.Initialize(context);
-    }
-
-    public override void Process(EnemyContext context)
-    {
-        if (_targetListener == null || _targetListener.Value == null)
+        public override void Initialize(ShipContext context)
         {
-            return;
+            _context = context;
         }
 
-        _obstacleAvoidanceStrategy.Process(_enemyContext);
-        _waypointReachingStrategy.Process(_enemyContext);
-        _aimingStrategy.Process(_enemyContext);
+        public override void Process(ShipContext context)
+        {
+            context.Brain.CSA.ChaseTarget();
+        }
     }
 }

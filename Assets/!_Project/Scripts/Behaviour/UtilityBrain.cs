@@ -1,68 +1,79 @@
+using Character.Enemy;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-public class UtilityBrain : MonoBehaviour, IStrategy
+namespace UtilitySystem
 {
-    [SerializeField] private ActionsConfig _actionsConfig;
-
-    [SerializeField, Min(0f)] private float _decisionDelay = 3f;
-
-    private EnemyContext _context;
-
-    private BaseAIAction _curAction = null;
-
-    private List<BaseAIAction> _actions = new();
-
-    private float _lastDecisionTime = float.NegativeInfinity;
-
-    private void Awake()
+    public class UtilityBrain : MonoBehaviour, IContextStrategy
     {
-        _actions = _actionsConfig.GetActions();
-    }
+        [SerializeReference] private CommonStrategyAggregator _csa = new();
 
-    public void Initialize(EnemyContext context)
-    {
-        foreach (var action in _actions)
+        [SerializeField] private ActionsConfig _actionsConfig;
+
+        [SerializeField, Min(0f)] private float _decisionDelay = 3f;
+
+        public CommonStrategyAggregator CSA => _csa;
+
+        private ShipContext _context;
+
+        private BaseAIAction _curAction = null;
+
+        private List<BaseAIAction> _actions = new();
+
+        private float _lastDecisionTime = float.NegativeInfinity;
+
+        private void Awake()
         {
-            action.Initialize(context);
+            _actions = _actionsConfig.GetActions();
         }
-        _context = context;
-        PickNewAction();
-    }
 
-    public void Process(EnemyContext context)
-    {
-        if (Time.time - _lastDecisionTime >= _decisionDelay)
+        public void Initialize(ShipContext context)
         {
-            _lastDecisionTime = Time.time;
+            foreach (var action in _actions)
+            {
+                action.Initialize(context);
+            }
+            _csa.Initialize(context);
+            _context = context;
             PickNewAction();
         }
-        _curAction?.Process(context);
-    }
 
-    private void PickNewAction()
-    {
-        if (_context == null)
+        public void Process(ShipContext context)
         {
-            return;
-        }
-        float bestVal = float.NegativeInfinity;
-        BaseAIAction bestAction = null;
-
-        foreach (var action in _actions)
-        {
-            float curVal = action.OnEvaluate(_context);
-            if (curVal > bestVal)
+            if (Time.time - _lastDecisionTime >= _decisionDelay)
             {
-                bestVal = curVal;
-                bestAction = action;
+                _lastDecisionTime = Time.time;
+                PickNewAction();
             }
+            _curAction?.Process(context);
+            _csa.Process(context);
         }
 
-        if (bestAction != null)
+        private void PickNewAction()
         {
-            _curAction = bestAction;
+            if (_context == null)
+            {
+                return;
+            }
+            float bestVal = float.NegativeInfinity;
+            BaseAIAction bestAction = null;
+
+            foreach (var action in _actions)
+            {
+                float curVal = action.OnEvaluate(_context);
+                if (curVal > bestVal)
+                {
+                    bestVal = curVal;
+                    bestAction = action;
+                }
+            }
+
+            if (bestAction != null)
+            {
+                _curAction = bestAction;
+            }
         }
     }
 }

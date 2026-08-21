@@ -1,18 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "ForceProcessorConfig", menuName = "Scriptable Objects/WaterForce/ForceProcessorConfig")]
-public class ForceProcessorConfig : ScriptableObject
+namespace WaterPhysics
 {
-    [SerializeReference, SubclassSelector] public List<ITransformForces> ForcePreprocessors = new();
-    [SerializeReference, SubclassSelector] public ICalculateWaterForceEffect ForceProcessor = new DummyForceProcessor();
-    [SerializeReference, SubclassSelector] public List<ITransformForceEffect> ForcePostprocessors = new();
-
-    private void OnValidate()
+    [CreateAssetMenu(fileName = "ForceProcessorConfig", menuName = "Scriptable Objects/WaterForce/ForceProcessorConfig")]
+    public class ForceProcessorConfig : ScriptableObject
     {
-        if (ForceProcessor == null)
+        [SerializeReference, SubclassSelector] public List<ITransformForces> ForcePreprocessors = new();
+        [SerializeReference, SubclassSelector] public ICalculateWaterForceEffect ForceProcessor = new DummyForceProcessor();
+        [SerializeReference, SubclassSelector] public List<ITransformForceEffect> ForcePostprocessors = new();
+
+        private void OnValidate()
         {
-            ForceProcessor = new DummyForceProcessor();
+            if (ForceProcessor == null)
+            {
+                ForceProcessor = new DummyForceProcessor();
+            }
         }
     }
 }

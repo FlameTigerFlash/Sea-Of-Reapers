@@ -1,5 +1,9 @@
+using Character;
 using UnityEngine;
 
-public class PlayerDeathHandler : DeathHandler
+namespace Character.Player
 {
+    public class PlayerDeathHandler : DeathHandler
+    {
+    }
 }

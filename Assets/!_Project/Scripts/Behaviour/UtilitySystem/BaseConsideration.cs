@@ -1,13 +1,17 @@
 using UnityEngine;
 using System;
+using Character.Enemy;
 
-[Serializable]
-public abstract class BaseConsideration
+namespace UtilitySystem
 {
-    public float OnEvaluate(EnemyContext context)
+    [Serializable]
+    public abstract class BaseConsideration
     {
-        return Mathf.Clamp01(Evaluate(context));
-    }
+        public float OnEvaluate(ShipContext context)
+        {
+            return Mathf.Clamp01(Evaluate(context));
+        }
 
-    protected abstract float Evaluate(EnemyContext context);
+        protected abstract float Evaluate(ShipContext context);
+    }
 }

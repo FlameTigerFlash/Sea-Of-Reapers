@@ -1,9 +1,10 @@
+using Character.Enemy;
 using NUnit.Framework;
 using UnityEngine;
 
-public class AimingStrategy : IStrategy
+public class AimingStrategy : IContextStrategy
 {
-    private EnemyContext _enemyContext;
+    private ShipContext _enemyContext;
 
     private GameObject _selfObject;
     private Cannon _cannon;
@@ -12,7 +13,7 @@ public class AimingStrategy : IStrategy
 
     private float _hitRange = 4f;
 
-    public void Initialize(EnemyContext context)
+    public void Initialize(ShipContext context)
     {
         _enemyContext = context;
 
@@ -21,8 +22,12 @@ public class AimingStrategy : IStrategy
         _cannon = _enemyContext.Cannon;
     }
 
-    public void Process(EnemyContext context)
+    public void Process(ShipContext context)
     {
+        if (_targetObject == null || _targetObject.Value == null)
+        {
+            return;
+        }
         Vector3 targetPos = _targetObject.Value.transform.position;
         Vector3 shootDirection = _cannon.AimToTarget(targetPos);
         if (shootDirection == Vector3.zero)

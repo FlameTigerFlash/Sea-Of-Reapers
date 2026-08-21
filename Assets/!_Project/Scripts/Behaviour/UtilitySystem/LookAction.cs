@@ -1,36 +1,25 @@
-﻿using System;
+﻿using Character.Enemy;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-[Serializable]
-public class LookAction : BaseAIAction
+namespace UtilitySystem
 {
-    private EnemyContext _enemyContext;
-
-    private ReactiveListener<GameObject> _targetListener;
-
-    private IStrategy _aimingStrategy;
-    private IStrategy _rotationStraregy;
-
-    public override void Initialize(EnemyContext context)
+    [Serializable]
+    public class LookAction : BaseAIAction
     {
-        _enemyContext = context;
+        private ShipContext _context;
 
-        _targetListener = _enemyContext.TargetObject;
-
-        _aimingStrategy = new AimingStrategy(); _aimingStrategy.Initialize(context);
-        _rotationStraregy = new RotationStrategy(); _rotationStraregy.Initialize(context);
-    }
-
-    public override void Process(EnemyContext context)
-    {
-        if (_targetListener == null || _targetListener.Value == null)
+        public override void Initialize(ShipContext context)
         {
-            return;
-        }
-        _rotationStraregy.Process(context);
-        _aimingStrategy.Process(context);
+            _context = context;
 
+        }
+
+        public override void Process(ShipContext context)
+        {
+            context.Brain.CSA.RotateTowardsTarget();
+        }
     }
 }

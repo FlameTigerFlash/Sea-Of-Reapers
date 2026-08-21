@@ -2,63 +2,66 @@ using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInputHandler : MonoBehaviour
+namespace Character.Player
 {
-    private PlayerContext _playerContext;
-
-    public void Initialize(PlayerContext playerContext)
+    public class PlayerInputHandler : MonoBehaviour
     {
-        _playerContext = playerContext;
-    }
+        private PlayerContext _playerContext;
 
-    public void OnMove(InputAction.CallbackContext callbackContext)
-    {
-        if (_playerContext == null) return;
-
-        Vector2 dir = callbackContext.ReadValue<Vector2>();
-        _playerContext.RequestedDirection.Value = dir;
-    }
-
-    public void OnAttack(InputAction.CallbackContext callbackContext)
-    {
-        if (_playerContext == null) return;
-
-        if (callbackContext.canceled)
+        public void Initialize(PlayerContext playerContext)
         {
-            _playerContext.IsAttacking.Value = false;
+            _playerContext = playerContext;
         }
-        else
+
+        public void OnMove(InputAction.CallbackContext callbackContext)
         {
-            _playerContext.IsAttacking.Value = true;
+            if (_playerContext == null) return;
+
+            Vector2 dir = callbackContext.ReadValue<Vector2>();
+            _playerContext.RequestedDirection.Value = dir;
         }
-    }
 
-    public void OnAuxAction(InputAction.CallbackContext callbackContext)
-    {
-        if (_playerContext == null) return;
-
-        if (callbackContext.canceled)
+        public void OnAttack(InputAction.CallbackContext callbackContext)
         {
-            _playerContext.IsAiming.Value = false;
+            if (_playerContext == null) return;
+
+            if (callbackContext.canceled)
+            {
+                _playerContext.IsAttacking.Value = false;
+            }
+            else
+            {
+                _playerContext.IsAttacking.Value = true;
+            }
         }
-        else
+
+        public void OnAuxAction(InputAction.CallbackContext callbackContext)
         {
-            _playerContext.IsAiming.Value = true;
+            if (_playerContext == null) return;
+
+            if (callbackContext.canceled)
+            {
+                _playerContext.IsAiming.Value = false;
+            }
+            else
+            {
+                _playerContext.IsAiming.Value = true;
+            }
         }
-    }
 
-    public void OnLook(InputAction.CallbackContext callbackContext)
-    {
-        if (_playerContext == null) return;
+        public void OnLook(InputAction.CallbackContext callbackContext)
+        {
+            if (_playerContext == null) return;
 
-        Vector2 offset = callbackContext.ReadValue<Vector2>();
-        _playerContext.CameraMovement.Value = offset;
-    }
+            Vector2 offset = callbackContext.ReadValue<Vector2>();
+            _playerContext.CameraMovement.Value = offset;
+        }
 
-    public void OnObserve(InputAction.CallbackContext callbackContext)
-    {
-        if (_playerContext == null) return;
+        public void OnObserve(InputAction.CallbackContext callbackContext)
+        {
+            if (_playerContext == null) return;
 
-        _playerContext.IsObserving.Value = !(callbackContext.canceled);
+            _playerContext.IsObserving.Value = !(callbackContext.canceled);
+        }
     }
 }
