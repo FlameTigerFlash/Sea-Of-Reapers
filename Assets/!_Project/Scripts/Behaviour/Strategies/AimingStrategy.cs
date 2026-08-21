@@ -1,13 +1,14 @@
 using Character.Enemy;
 using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AimingStrategy : IContextStrategy
 {
     private ShipContext _enemyContext;
 
     private GameObject _selfObject;
-    private Cannon _cannon;
+    private List<Cannon> _cannons;
 
     private ReactiveListener<GameObject> _targetObject;
 
@@ -19,7 +20,7 @@ public class AimingStrategy : IContextStrategy
 
         _selfObject = _enemyContext.SelfObject;
         _targetObject = _enemyContext.TargetObject;
-        _cannon = _enemyContext.Cannon;
+        _cannons = _enemyContext.Cannons;
     }
 
     public void Process(ShipContext context)
@@ -28,27 +29,33 @@ public class AimingStrategy : IContextStrategy
         {
             return;
         }
+        
+        foreach (var cannon in _cannons)
+        {
+            HandleCannonAiming(cannon);
+        }
+    }
+
+    private void HandleCannonAiming(Cannon cannon)
+    {
         Vector3 targetPos = _targetObject.Value.transform.position;
-        Vector3 shootDirection = _cannon.AimToTarget(targetPos);
+        Vector3 shootDirection = cannon.AimToTarget(targetPos);
         if (shootDirection == Vector3.zero)
         {
             return;
         }
-        _cannon.RotateTowards(shootDirection);
+        cannon.RotateTowards(shootDirection);
 
-        if (_cannon.CanShoot && ValidateShootingTrajectory())
+        if (cannon.CanShoot && ValidateShootingTrajectory(cannon))
         {
-            _cannon.TryShoot();
+            cannon.TryShoot();
         }
     }
 
-    private bool ValidateShootingTrajectory()
+    private bool ValidateShootingTrajectory(Cannon cannon)
     {
-        var tracesList = _cannon.GetTrace(_cannon.GlobalRotation * Vector3.forward);
-        if (tracesList == null || tracesList.Count == 0)
-        {
-            return false;
-        }
+        var tracesList = cannon.GetTrace(cannon.GlobalRotation * Vector3.forward);
+        if (tracesList == null || tracesList.Count == 0) return false;
 
         var trace = tracesList[0];
         foreach (var node in trace)
@@ -56,23 +63,14 @@ public class AimingStrategy : IContextStrategy
             var hits = node.Hits;
             if (hits != null && hits.Length != 0)
             {
-                Rigidbody otherRb = hits[0].rigidbody;
-                if (otherRb != null && hits[0].rigidbody.gameObject == _targetObject.Value)
-                {
-                    return true;
-                }
-                else
-                {
-                    continue;
-                }
+                bool targetHit = hits[0].transform.IsChildOf(_targetObject.Value.transform);
+                if (targetHit) return true;
+                continue;
             }
 
             Vector3 end = node.End;
             float minDist = Vector3.Distance(_targetObject.Value.transform.position, end);
-            if (minDist <= _hitRange)
-            {
-                return true;
-            }
+            if (minDist <= _hitRange) return true;
         }
 
         return false;

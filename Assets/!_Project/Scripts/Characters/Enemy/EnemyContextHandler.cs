@@ -14,7 +14,7 @@ namespace Character.Enemy
         [SerializeField, NotNull] private Engine _mainEngine;
         [SerializeField, NotNull] private Rotor _mainEngineRotor;
         [SerializeField, NotNull] private Radar _radar;
-        [SerializeField, NotNull] private Cannon _cannon;
+        [SerializeField, NotNull] private List<Cannon> _cannons = new();
 
         [SerializeField, NotNull] private CharacterHP _health;
 
@@ -58,7 +58,10 @@ namespace Character.Enemy
                 return;
             }
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(_context.WaypointPosition.Value, 3f);
+            Gizmos.DrawWireSphere(_context.WaypointPosition.Value, 2f);
+
+            Gizmos.color = Color.orange;
+            Gizmos.DrawWireSphere(_context.MovementDestination.Value, 2.5f);
 
             if (_context.TargetObject.Value != null)
             {
@@ -119,7 +122,7 @@ namespace Character.Enemy
 
             _context.Brain = _brain;
             _context.Radar = _radar;
-            _context.Cannon = _cannon;
+            _context.Cannons = _cannons;
 
             _context.Health.ValueChangedEvent += (float newHp) =>
             {

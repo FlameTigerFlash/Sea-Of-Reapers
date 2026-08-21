@@ -89,7 +89,7 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
 
     public Vector3 AimToTarget(Vector3 targetPos)
     {
-        float angle = 0;
+        float angle = 45;
         Vector3 connector = targetPos - CurrentPosition, horizontalDirection = new Vector3(connector.x, 0, connector.z);
         float relHeight = connector.y;
 
@@ -100,15 +100,16 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
         float D = b * b - 4 * a * c;
         if (D < 0)
         {
-            angle = 45;
+            angle = 45 * Mathf.Deg2Rad;
         }
         else
         {
             float tan = (-b + Mathf.Sqrt(D)) / (a * 2);
-            angle = Mathf.Atan(tan) * Mathf.Rad2Deg;
+            angle = Mathf.Atan(tan);
         }
+        var direction = horizontalDirection.normalized * Mathf.Cos(angle) + Vector3.up * Mathf.Sin(angle);
 
-        return Quaternion.Euler(-angle, 0, 0) * horizontalDirection.normalized;
+        return direction;
     }
 
     public List<TraceNode[]> GetTrace(Vector3 direction)

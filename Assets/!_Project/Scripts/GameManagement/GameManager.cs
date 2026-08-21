@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private float _sceneChangingDelay = 2f;
 
+    [SerializeField] private bool _testMode = false;
+
     private WaveManager _waveManager;
 
     private MapLocator _mapLocator;
@@ -56,6 +58,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleWaveInitiation()
     {
+        if (_testMode) return;
         bool canInitiate = _waveManager.TryInitiateWave();
 
         if (!canInitiate)

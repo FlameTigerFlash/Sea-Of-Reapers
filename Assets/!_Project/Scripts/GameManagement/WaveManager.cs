@@ -12,6 +12,10 @@ public class WaveManager : MonoBehaviour
 
     public bool CanInitiateWave()
     {
+        if (_wavesConfig == null)
+        {
+            return false;
+        }
         return _waveNum < _wavesConfig.EnemiesCount.Count;
     }
 

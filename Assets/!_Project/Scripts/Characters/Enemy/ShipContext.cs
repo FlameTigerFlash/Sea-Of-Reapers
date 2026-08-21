@@ -9,7 +9,7 @@ namespace Character.Enemy
     {
         public UtilityBrain Brain;
         public Radar Radar;
-        public Cannon Cannon;
+        public List<Cannon> Cannons;
 
         public ReactiveListener<GameObject> TargetObject;
 

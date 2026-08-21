@@ -18,6 +18,8 @@ public class CommonStrategyAggregator : IContextStrategy
     private readonly IContextStrategy _waypointReachingStrategy = new WaypointReachingStrategy();
     private readonly IContextStrategy _defaultAimingStrategy = new AimingStrategy();
 
+    private bool _isChasing = false;
+
     public void Initialize(ShipContext context)
     {
         _context = context;
@@ -28,19 +30,33 @@ public class CommonStrategyAggregator : IContextStrategy
         _defaultAimingStrategy.Initialize(_context);
 
         _aimingStrategy = _defaultAimingStrategy;
-        _movementStrategy = _waypointReachingStrategy;
-        _pathfindingStrategy = _obstacleAvoidanceStrategy;
     }
 
     public void Process(ShipContext context)
     {
+        if (_isChasing && _context.TargetObject.Value != null)
+        {
+            _context.MovementDestination.Value = _context.TargetObject.Value.transform.position;
+        }
+
         _pathfindingStrategy?.Process(context);
         _movementStrategy?.Process(context);
         _aimingStrategy?.Process(context);
     }
 
+    public void SetDestination(Vector3 destination)
+    {
+        _isChasing = false;
+        _context.MovementDestination.Value = destination;
+
+        _movementStrategy = _waypointReachingStrategy;
+        _pathfindingStrategy = _obstacleAvoidanceStrategy;
+    }
+
     public void ChaseTarget()
     {
+        _isChasing = true;
+
         _movementStrategy = _waypointReachingStrategy;
         _pathfindingStrategy = _obstacleAvoidanceStrategy;
     }
@@ -49,5 +65,12 @@ public class CommonStrategyAggregator : IContextStrategy
     {
         _pathfindingStrategy = null;
         _movementStrategy = _rotationStrategy;
+    }
+
+    public void StopMoving()
+    {
+        _isChasing = false;
+        _movementStrategy = null;
+        _pathfindingStrategy = null;
     }
 }
