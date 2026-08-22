@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using System;
+using Zenject;
 
 public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
 {
@@ -16,7 +17,7 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
     [SerializeField, Min(0)] private float _rotationSpeed = 4f;
 
     [Header("Shooting settings")]
-    [SerializeField] private GameObject _projectile;
+    [SerializeField] private ProjectileTypes _projectileType = ProjectileTypes.RedBall;
     [SerializeField, Min(float.Epsilon)] private float _shootingDelay = 2f;
     [SerializeField] private float _shootingAcceleration = 20f;
 
@@ -30,6 +31,8 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
     public Vector3 CurrentPosition => transform.position;
 
     public bool CanShoot { get; private set; } = true;
+
+    private ProjectileFactory _projectileFactory;
 
     private Quaternion _desiredRotation = Quaternion.identity;
     #endregion
@@ -51,6 +54,12 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
     {
         float t = 1f - Mathf.Exp(-_rotationSpeed * Time.deltaTime);
         transform.localRotation = Quaternion.Lerp(transform.localRotation, _desiredRotation, t);
+    }
+
+    [Inject]
+    public void Construct(ProjectileFactory projFactory)
+    {
+        _projectileFactory = projFactory;
     }
 
     public bool TryShoot()
@@ -150,7 +159,7 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
 
     private void Shoot()
     {
-        var proj = Instantiate(_projectile, _shootingPoint.position, _shootingPoint.rotation);
+        var proj = _projectileFactory.Create(_projectileType, _shootingPoint.position, _shootingPoint.rotation);
         var rb = proj.GetComponent<Rigidbody>();
         if (rb == null)
         {

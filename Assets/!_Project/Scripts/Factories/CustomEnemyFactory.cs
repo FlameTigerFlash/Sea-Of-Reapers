@@ -1,5 +1,6 @@
 using Character;
 using Character.Enemy;
+using System;
 using UnityEngine;
 using Zenject;
 
@@ -21,7 +22,7 @@ public class CustomEnemyFactory : IFactory<EnemyTypes, Vector3, Quaternion, Enem
     {
         if (!_prefabsConfig.EnemyPrefabs.ContainsKey(enemyType))
         {
-            Debug.LogError($"Enemy type: {enemyType} does not provide a prefab to spawn.");
+            throw new ArgumentException($"Enemy type: {enemyType} does not provide a prefab to spawn.");
         }
         GameObject enemyPrefab = _prefabsConfig.EnemyPrefabs[enemyType];
 

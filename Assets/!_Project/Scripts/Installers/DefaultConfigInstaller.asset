@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: DefaultConfigInstaller
   m_EditorClassIdentifier: Assembly-CSharp::ConfigInstaller
   _enemyPrefabsConfig: {fileID: 11400000, guid: 8b2f4eb2570e238488bd15d5e820d815, type: 2}
+  _flyweightPrefabsConfig: {fileID: 11400000, guid: efc72b5fd51a8c24a8b721bbe5a95306, type: 2}
+  _projectilePrefabsConfig: {fileID: 11400000, guid: 73acf72d0f1d7e249827e68a6e67d6a3, type: 2}

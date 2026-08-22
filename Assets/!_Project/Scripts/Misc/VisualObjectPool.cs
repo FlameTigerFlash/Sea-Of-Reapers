@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Pool;
+using System;
+using Zenject;
 
-public class VisualObjectPool
+public class VisualObjectPool : IDisposable
 {
-    private GameObject _prefab;
+    private readonly GameObject _prefab;
 
     private int _maxPoolSize = 1000;
     private bool _collectionChecks = true;
@@ -34,6 +36,11 @@ public class VisualObjectPool
     {
         _maxPoolSize = maxPoolSize;
         _collectionChecks = collectionChecks;
+    }
+
+    public void Dispose()
+    {
+        Pool.Clear();
     }
 
     private GameObject CreatePooledItem()

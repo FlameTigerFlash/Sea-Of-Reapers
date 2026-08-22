@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
+using Zenject;
 
 namespace Character.Player
 {
@@ -11,18 +12,10 @@ namespace Character.Player
         [SerializeField] private float _rotationSpeed = 30f;
         [SerializeField, Range(0, 0.9f)] float _stickDistanceThreshold = 0.15f;
 
-        [Header("Trace")]
-        [SerializeField, NotNull] private GameObject _tracePrefab;
-
         private PlayerContext _playerContext;
-        private VisualObjectPool _pool;
+        private FlyweightFactory _flyweightFactory;
 
         private List<GameObject> _traces = new();
-
-        private void Awake()
-        {
-            _pool = new(_tracePrefab);
-        }
 
         private void Start()
         {
@@ -44,10 +37,16 @@ namespace Character.Player
             {
                 if (trace != null)
                 {
-                    _pool.Pool.Release(trace);
+                    _flyweightFactory.TryRelease(trace);
                 }
             }
             _traces.Clear();
+        }
+
+        [Inject]
+        public void Construct(FlyweightFactory flyweightFactory)
+        {
+            _flyweightFactory = flyweightFactory;
         }
 
         public void Initialize(PlayerContext playerContext)
@@ -96,12 +95,12 @@ namespace Character.Player
 
             while (_traces.Count < positions.Count)
             {
-                _traces.Add(_pool.Pool.Get());
+                _traces.Add(_flyweightFactory.Create(FlyweightTypes.PlayerCannonTrace));
             }
             while (_traces.Count > positions.Count)
             {
                 var lastTrace = _traces[_traces.Count - 1];
-                _pool.Pool.Release(lastTrace);
+                _flyweightFactory.TryRelease(lastTrace);
                 _traces.RemoveAt(_traces.Count - 1);
             }
 

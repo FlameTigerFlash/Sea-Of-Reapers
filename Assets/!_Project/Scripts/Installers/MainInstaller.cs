@@ -1,4 +1,5 @@
 using Character.Enemy;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using Zenject;
@@ -14,6 +15,11 @@ public class MainInstaller : MonoInstaller
         Container.Bind<IFactory<EnemyTypes, Vector3, Quaternion, EnemyContextHandler>>()
         .To<CustomEnemyFactory>()
         .AsSingle();
+
+        Container.Bind<FlyweightFactory>().AsSingle();
+        Container.Bind<ProjectileFactory>().AsSingle();
+
+        Container.BindInterfacesAndSelfTo<VisualObjectPool>().AsSingle();
 
         SignalBusInstaller.Install(Container);
         Container.DeclareSignal<PlayerDiedSignal>();

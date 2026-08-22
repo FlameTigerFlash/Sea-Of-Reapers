@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class MapLocator : MonoBehaviour
 {
-    [SerializeField] private Transform _enemiesFolder;
+    [field: SerializeField] public Transform EnemiesFolder { get; private set; }
+    [field: SerializeField] public Transform ProjectilesFolder { get; private set; }
+    [field: SerializeField] public Transform ParticlesFolder { get; private set; }
+    [field: SerializeField] public Transform FlyweightFolder { get; private set; }
 
     [SerializeField] private float _cleanupDelay = 100f;
 
     public event Action<GameObject, bool> EnemyDataChangedEvent;
-
-    public Transform EnemiesFolder => _enemiesFolder;
 
     public IReadOnlyCollection<GameObject> EnemiesCollection => _enemies;
 

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[CreateAssetMenu(fileName = "EnemyPrefabsConfig", menuName = "Scriptable Objects/EnemyPrefabsConfig")]
+[CreateAssetMenu(fileName = "EnemyPrefabsConfig", menuName = "Scriptable Objects/Prefab Configs/EnemyPrefabsConfig")]
 public class EnemyPrefabsConfig : ScriptableObject
 {
     [SerializeField] private GameObject _gunboatPrefab;

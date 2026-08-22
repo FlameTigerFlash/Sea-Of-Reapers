@@ -7,7 +7,7 @@ public class SimpleDistanceEvaluator
     [SerializeField, Min(0f)] private float _minDistance = 0;
     [SerializeField, Min(0f)] private float _maxDistance = 100;
 
-    [SerializeField] private AnimationCurve _curve;
+    [SerializeField] private AnimationCurve _curve = new();
 
     public SimpleDistanceEvaluator()
     {

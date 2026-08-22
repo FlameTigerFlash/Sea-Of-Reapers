@@ -2646,6 +2646,10 @@ PrefabInstance:
       value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
+      propertyPath: _projectileType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _shootingAcceleration
       value: 60
       objectReference: {fileID: 0}
