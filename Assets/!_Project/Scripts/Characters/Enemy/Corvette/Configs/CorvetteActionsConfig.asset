@@ -12,7 +12,110 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c996742fd5479e34a9b99e20b57b0b38, type: 3}
   m_Name: CorvetteActionsConfig
   m_EditorClassIdentifier: Assembly-CSharp::ActionsConfig
-  _actions: []
+  _actions:
+  - rid: 320123317410333308
+  - rid: 320123317410333218
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 320123317410333218
+      type: {class: ChaseAction, ns: UtilitySystem, asm: Assembly-CSharp}
+      data:
+        _consideration:
+          rid: 320123317410333219
+    - rid: 320123317410333219
+      type: {class: DistanceConsideration, ns: UtilitySystem, asm: Assembly-CSharp}
+      data:
+        _distanceEvaluator:
+          rid: 320123317410333220
+    - rid: 320123317410333220
+      type: {class: SimpleDistanceEvaluator, ns: , asm: Assembly-CSharp}
+      data:
+        _minDistance: 0
+        _maxDistance: 800
+        _curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0.003174603
+            inSlope: 0.9968254
+            outSlope: 0.9968254
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0.9968254
+            outSlope: 0.9968254
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 320123317410333308
+      type: {class: SkirmishAction, ns: UtilitySystem, asm: Assembly-CSharp}
+      data:
+        _consideration:
+          rid: 320123317410333311
+        _distanceEvaluator:
+          rid: 320123317410333309
+        _angleEvaluator:
+          rid: 320123317410333310
+        _distanceCoefficient: 0.8
+        _angleCoefficient: 1
+        _rotationCoefficient: 0.5
+    - rid: 320123317410333309
+      type: {class: SimpleDistanceEvaluator, ns: , asm: Assembly-CSharp}
+      data:
+        _minDistance: 0
+        _maxDistance: 600
+        _curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 1.9772483
+            outSlope: 1.9772483
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.50555235
+            value: 0.99960256
+            inSlope: -0.0028365839
+            outSlope: -0.0028365839
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.24522352
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -2.021655
+            outSlope: -2.021655
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 320123317410333310
+      type: {class: SimpleAngleEvaluator, ns: , asm: Assembly-CSharp}
+      data:
+        _forwardArc: 160
+        _rearArc: 90
+        _forwardValue: 0.2
+        _sideValue: 1
+        _rearValue: 0
+    - rid: 320123317410333311
+      type: {class: ConstantConsideration, ns: UtilitySystem, asm: Assembly-CSharp}
+      data:
+        _value: 0.5

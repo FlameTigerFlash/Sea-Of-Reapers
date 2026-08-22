@@ -975,6 +975,15 @@ MonoBehaviour:
   _health: {fileID: 2726356176516161702}
   _deathHandler: {fileID: 9186572777859589164}
   _startActive: 1
+  _contextSettings:
+    rid: 320123317410333213
+  references:
+    version: 2
+    RefIds:
+    - rid: 320123317410333213
+      type: {class: ShipContext/ContextSettings, ns: Character.Enemy, asm: Assembly-CSharp}
+      data:
+        _angularVelocity: 60
 --- !u!114 &2726356176516161702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1020,6 +1029,7 @@ MonoBehaviour:
     rid: 320123300929339575
   _actionsConfig: {fileID: 11400000, guid: b4205c2f185c2a249b275b50544cddad, type: 2}
   _decisionDelay: 3
+  _decisionChangeThreshold: 0.1
   references:
     version: 2
     RefIds:
@@ -1469,8 +1479,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6375720522370646558, guid: c0ed7b4cc9ce9f2438e35c5117e87b7f, type: 3}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
+      propertyPath: _maxVerticalRotation
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _shootingAcceleration
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _maxHorizontalRotation
@@ -1566,8 +1580,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6375720522370646558, guid: c0ed7b4cc9ce9f2438e35c5117e87b7f, type: 3}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
+      propertyPath: _maxVerticalRotation
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _shootingAcceleration
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _maxHorizontalRotation
@@ -1663,8 +1681,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6375720522370646558, guid: c0ed7b4cc9ce9f2438e35c5117e87b7f, type: 3}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
+      propertyPath: _maxVerticalRotation
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _shootingAcceleration
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _maxHorizontalRotation
@@ -1760,8 +1782,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6375720522370646558, guid: c0ed7b4cc9ce9f2438e35c5117e87b7f, type: 3}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
+      propertyPath: _maxVerticalRotation
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _shootingAcceleration
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 937527441015840931, guid: 1b507821953043c4aae4250a3a667673, type: 3}
       propertyPath: _maxHorizontalRotation

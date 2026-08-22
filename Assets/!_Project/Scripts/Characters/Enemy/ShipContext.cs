@@ -7,6 +7,8 @@ namespace Character.Enemy
 {
     public class ShipContext
     {
+        public readonly ContextSettings Settings = new();
+
         public UtilityBrain Brain;
         public Radar Radar;
         public List<Cannon> Cannons;
@@ -27,9 +29,21 @@ namespace Character.Enemy
 
         public readonly Dictionary<string, object> Data;
 
-        public ShipContext(GameObject self)
+        public ShipContext(GameObject self, ContextSettings settings = null)
         {
             SelfObject = self;
+            if (settings != null)
+            {
+                Settings = settings;
+            }
+        }
+
+        [Serializable]
+        public class ContextSettings
+        {
+            [field: SerializeField, Min(0f)] public float _angularVelocity = 60f;
+
+            //[field: SerializeField, Min(0f)] public float _linearVelocity = 4f;
         }
     }
 }

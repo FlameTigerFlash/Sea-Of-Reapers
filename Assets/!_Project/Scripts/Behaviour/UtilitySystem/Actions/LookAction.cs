@@ -7,10 +7,8 @@ using UnityEngine;
 namespace UtilitySystem
 {
     [Serializable]
-    public class SetCustomDestinationAction : BaseAIAction
+    public class LookAction : BaseAIAction
     {
-        [SerializeField] private Vector3 _destination;
-
         private ShipContext _context;
 
         public override void Initialize(ShipContext context)
@@ -21,7 +19,8 @@ namespace UtilitySystem
 
         public override void Process(ShipContext context)
         {
-            context.Brain.CSA.SetDestination(_destination);
+            context.Brain.CSA.SetAutopilot(false);
+            context.Brain.CSA.RotateTowardsTarget();
         }
     }
 }

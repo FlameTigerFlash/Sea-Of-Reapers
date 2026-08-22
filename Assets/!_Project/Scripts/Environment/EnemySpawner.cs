@@ -8,17 +8,22 @@ public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Transform _spawnPoint;
 
-    private IFactory<Vector3, Quaternion, EnemyContextHandler> _enemyFactory;
+    private IFactory<EnemyTypes, Vector3, Quaternion, EnemyContextHandler> _enemyFactory;
 
     [Inject]
-    public void Construct(IFactory<Vector3, Quaternion, EnemyContextHandler> enemyFactory)
+    public void Construct(IFactory<EnemyTypes, Vector3, Quaternion, EnemyContextHandler> enemyFactory)
     {
         _enemyFactory = enemyFactory;
     }
 
     public GameObject SpawnEnemy()
     {
-        var enemyContextHandler = _enemyFactory.Create(_spawnPoint.position, _spawnPoint.rotation);
+        return SpawnEnemy(EnemyTypes.Corvette);
+    }
+
+    public GameObject SpawnEnemy(EnemyTypes enemyType)
+    {
+        var enemyContextHandler = _enemyFactory.Create(enemyType, _spawnPoint.position, _spawnPoint.rotation);
         enemyContextHandler.SetActive();
 
         return enemyContextHandler.gameObject;

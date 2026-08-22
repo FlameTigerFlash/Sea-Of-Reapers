@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1a8fa0b7b0d5ac46aa9b67864584c58, type: 3}
+  m_Name: DefaultPrefabsConfig
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyPrefabsConfig
+  _gunboatPrefab: {fileID: 906509281762096340, guid: cddbc9b05b2560a4b97a42bc85be0d83, type: 3}
+  _corvettePrefab: {fileID: 2661508862050862381, guid: 1442abaf541f4b34bb830c8e4c426cbf, type: 3}

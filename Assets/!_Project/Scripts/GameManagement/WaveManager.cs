@@ -16,7 +16,7 @@ public class WaveManager : MonoBehaviour
         {
             return false;
         }
-        return _waveNum < _wavesConfig.EnemiesCount.Count;
+        return _waveNum < _wavesConfig.Waves.Count;
     }
 
     public bool TryInitiateWave()
@@ -25,9 +25,9 @@ public class WaveManager : MonoBehaviour
         {
             return false;
         }
-        if (_wavesConfig.EnemiesCount[_waveNum] <= 0)
+        if (_wavesConfig.Waves[_waveNum].Enemies.Count == 0)
         {
-            Debug.LogError($"Invalid wave {_waveNum} size: {_wavesConfig.EnemiesCount[_waveNum]}.");
+            Debug.LogError($"Invalid wave {_waveNum} size.");
             return false;
         }
 
@@ -39,7 +39,8 @@ public class WaveManager : MonoBehaviour
 
     private void InitiateWave()
     {
-        int enemiesCount = _wavesConfig.EnemiesCount[_waveNum];
+        var curWave = _wavesConfig.Waves[_waveNum];
+        int enemiesCount = curWave.Enemies.Count;
 
         if (enemiesCount >= _spawners.Count)
         {
@@ -61,7 +62,8 @@ public class WaveManager : MonoBehaviour
                 if (cnt == curChoice)
                 {
                     used[i] = true;
-                    _spawners[i].SpawnEnemy();
+                    _spawners[i].SpawnEnemy(curWave.Enemies[curEnemy]);
+                    break;
                 }
                 cnt++;
             }

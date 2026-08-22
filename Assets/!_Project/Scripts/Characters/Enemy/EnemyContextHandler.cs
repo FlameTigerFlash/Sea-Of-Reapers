@@ -22,6 +22,8 @@ namespace Character.Enemy
 
         [SerializeField] private bool _startActive = true;
 
+        [SerializeReference] private ShipContext.ContextSettings _contextSettings = new();
+
         private MapLocator _mapLocator;
 
         public ShipContext Context => _context;
@@ -38,7 +40,7 @@ namespace Character.Enemy
         {
             IsActive = _startActive;
 
-            _context = new(gameObject);
+            _context = new(gameObject, _contextSettings);
             SetupFields();
             SetupComponents();
         }
@@ -124,7 +126,7 @@ namespace Character.Enemy
             _context.Radar = _radar;
             _context.Cannons = _cannons;
 
-            _context.Health.ValueChangedEvent += (float newHp) =>
+            _context.Health.ValueChangedEvent += newHp =>
             {
                 if (newHp <= 0)
                 {

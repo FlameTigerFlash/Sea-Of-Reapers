@@ -14,6 +14,8 @@ namespace UtilitySystem
 
         [SerializeField, Min(0f)] private float _decisionDelay = 3f;
 
+        [SerializeField, Min(0f)] private float _decisionChangeThreshold = 0.05f;
+
         public CommonStrategyAggregator CSA => _csa;
 
         private ShipContext _context;
@@ -49,6 +51,7 @@ namespace UtilitySystem
             }
             _curAction?.Process(context);
             _csa.Process(context);
+            //Debug.Log(_curAction);
         }
 
         private void PickNewAction()
@@ -63,6 +66,10 @@ namespace UtilitySystem
             foreach (var action in _actions)
             {
                 float curVal = action.OnEvaluate(_context);
+                if (action == _curAction)
+                {
+                    curVal += _decisionChangeThreshold;
+                }
                 if (curVal > bestVal)
                 {
                     bestVal = curVal;

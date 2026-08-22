@@ -9,7 +9,7 @@ public class VisualObjectPool
     private int _maxPoolSize = 1000;
     private bool _collectionChecks = true;
 
-    private Dictionary<GameObject, Renderer> _renderers = new();
+    private readonly Dictionary<GameObject, Renderer> _renderers = new();
 
     private IObjectPool<GameObject> m_Pool;
 

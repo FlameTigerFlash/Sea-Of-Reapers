@@ -11,10 +11,9 @@ public class MainInstaller : MonoInstaller
     {
         Container.BindInstance(_enemyPrefab);
 
-        Container.Bind<IFactory<Vector3, Quaternion, EnemyContextHandler>>()
+        Container.Bind<IFactory<EnemyTypes, Vector3, Quaternion, EnemyContextHandler>>()
         .To<CustomEnemyFactory>()
-        .AsSingle()
-        .WithArguments(_enemyPrefab);
+        .AsSingle();
 
         SignalBusInstaller.Install(Container);
         Container.DeclareSignal<PlayerDiedSignal>();

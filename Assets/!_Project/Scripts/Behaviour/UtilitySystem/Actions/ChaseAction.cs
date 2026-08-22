@@ -1,25 +1,23 @@
-﻿using Character.Enemy;
+using Character.Enemy;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace UtilitySystem
 {
     [Serializable]
-    public class LookAction : BaseAIAction
+    public class ChaseAction : BaseAIAction
     {
         private ShipContext _context;
 
         public override void Initialize(ShipContext context)
         {
             _context = context;
-
         }
 
         public override void Process(ShipContext context)
         {
-            context.Brain.CSA.RotateTowardsTarget();
+            context.Brain.CSA.SetAutopilot(true);
+            context.Brain.CSA.ChaseTarget();
         }
     }
 }

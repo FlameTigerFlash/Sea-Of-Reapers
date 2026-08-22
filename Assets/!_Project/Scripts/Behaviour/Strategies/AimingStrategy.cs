@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class AimingStrategy : IContextStrategy
 {
+    #region fields
     private ShipContext _enemyContext;
 
     private GameObject _selfObject;
@@ -12,7 +13,12 @@ public class AimingStrategy : IContextStrategy
 
     private ReactiveListener<GameObject> _targetObject;
 
+    private Vector3 _shootDirection = Vector3.forward;
+
     private float _hitRange = 4f;
+
+    private float _maxAngleOffset = 1f;
+    #endregion
 
     public void Initialize(ShipContext context)
     {
@@ -39,12 +45,10 @@ public class AimingStrategy : IContextStrategy
     private void HandleCannonAiming(Cannon cannon)
     {
         Vector3 targetPos = _targetObject.Value.transform.position;
-        Vector3 shootDirection = cannon.AimToTarget(targetPos);
-        if (shootDirection == Vector3.zero)
-        {
-            return;
-        }
-        cannon.RotateTowards(shootDirection);
+        _shootDirection = cannon.AimToTarget(targetPos, out var canHit);
+        if (_shootDirection == Vector3.zero || !canHit) return;
+
+        cannon.RotateTowards(_shootDirection);
 
         if (cannon.CanShoot && ValidateShootingTrajectory(cannon))
         {
@@ -54,6 +58,8 @@ public class AimingStrategy : IContextStrategy
 
     private bool ValidateShootingTrajectory(Cannon cannon)
     {
+        Vector3 cannonDir = cannon.GlobalRotation * Vector3.forward;
+
         var tracesList = cannon.GetTrace(cannon.GlobalRotation * Vector3.forward);
         if (tracesList == null || tracesList.Count == 0) return false;
 
@@ -72,6 +78,7 @@ public class AimingStrategy : IContextStrategy
             float minDist = Vector3.Distance(_targetObject.Value.transform.position, end);
             if (minDist <= _hitRange) return true;
         }
+        if (Mathf.Abs(Vector3.Angle(cannonDir, _shootDirection)) <= _maxAngleOffset) return true;
 
         return false;
     }

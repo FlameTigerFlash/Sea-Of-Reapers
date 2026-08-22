@@ -87,8 +87,10 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
         _desiredRotation = Quaternion.Euler(targetRotation);
     }
 
-    public Vector3 AimToTarget(Vector3 targetPos)
+    public Vector3 AimToTarget(Vector3 targetPos, out bool canHit)
     {
+        canHit = true;
+
         float angle = 45;
         Vector3 connector = targetPos - CurrentPosition, horizontalDirection = new Vector3(connector.x, 0, connector.z);
         float relHeight = connector.y;
@@ -101,6 +103,7 @@ public class Cannon : MonoBehaviour, IShoot, IRotate, IGetTrace, IAimToTarget
         if (D < 0)
         {
             angle = 45 * Mathf.Deg2Rad;
+            canHit = false;
         }
         else
         {

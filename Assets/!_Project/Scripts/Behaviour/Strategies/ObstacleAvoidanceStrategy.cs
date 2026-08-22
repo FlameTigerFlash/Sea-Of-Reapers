@@ -1,8 +1,13 @@
+using Character.Enemy;
 using NUnit.Framework;
-using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Character.Enemy;
+using Unity.AppUI.UI;
+using UnityEngine;
+using static Radar;
+
+using Random = UnityEngine.Random;
 
 public class ObstacleAvoidanceStrategy : IContextStrategy
 {
@@ -30,27 +35,42 @@ public class ObstacleAvoidanceStrategy : IContextStrategy
 
     private ReactiveField<Vector3> _targetPositionField;
 
-    private float _distanceCoef = 1f;
-    private float _difficultyCoef = 0f;
+    private Func<TraceNode, Vector3> GetFarthestReachablePoint = (node) =>
+    {
+        if (node.Hits == null || node.Hits.Length == 0)
+        {
+            return node.End;
+        }
+        return node.Hits[0].point;
+    };
+
+    private Func<Vector3, float> EstimatePointValue = null;
+
     private float _calculationInterval = 1f;
     private float _lastCalculationTime = 0f;
     #endregion
+
+    public ObstacleAvoidanceStrategy(Func<TraceNode, Vector3> gfrp = null, Func<Vector3, float> epv = null)
+    {
+        if (gfrp != null)
+        {
+            GetFarthestReachablePoint = gfrp;
+        }
+        EstimatePointValue = epv;
+        EstimatePointValue ??= (point) =>
+        {
+            Vector3 selfPos = _gameObject.transform.position; 
+            selfPos.y = 0;
+            float distSum = Vector3.Distance(selfPos, point) + Vector3.Distance(point, _destinationPosListener.Value);
+            return (distSum == 0)? float.PositiveInfinity: 1 / distSum;
+        };
+    }
 
     public void Initialize(ShipContext context)
     {
         _enemyContext = context;
 
-        _destinationPosListener = context.MovementDestination;
-
-        _gameObject = _enemyContext.SelfObject;
-        _targetGameObject = _enemyContext.TargetObject;
-
-        _rb = _gameObject.GetComponent<Rigidbody>();
-
-        _radar = _enemyContext.Radar;
-
-        _targetPositionField = _enemyContext.WaypointPosition;
-
+        SetupFields();
         _lastCalculationTime = Time.time;
     }
 
@@ -65,6 +85,20 @@ public class ObstacleAvoidanceStrategy : IContextStrategy
             CalculateNewWaypoint();
             _lastCalculationTime = Time.time;
         }
+    }
+
+    private void SetupFields()
+    {
+        _destinationPosListener = _enemyContext.MovementDestination;
+
+        _gameObject = _enemyContext.SelfObject;
+        _targetGameObject = _enemyContext.TargetObject;
+
+        _rb = _gameObject.GetComponent<Rigidbody>();
+
+        _radar = _enemyContext.Radar;
+
+        _targetPositionField = _enemyContext.WaypointPosition;
     }
 
     public bool IsLocked() => false;
@@ -88,68 +122,34 @@ public class ObstacleAvoidanceStrategy : IContextStrategy
     private void CalculateNewWaypoint()
     {
         var targetTransform = _targetGameObject.Value == null? null: _targetGameObject.Value.transform;
-        Vector3 selfPos = _gameObject.transform.position; selfPos.y = 0;
 
         var traces = _radar.Traces;
 
         List<Vector3> options = new();
-        List<Vector3> directCollisions = new();
-        List<float> movementDifficulty = new();
-        List<float> distance = new();
+        List<float> values = new();
         foreach (var trace in traces)
         {
             var node = trace.Node;
-            if (node.Hits.Length > 0 && targetTransform != null)
-            {
-                var otherTransform = node.Hits[0].transform;
-                if (otherTransform != null && (otherTransform == targetTransform || otherTransform.IsChildOf(targetTransform)))
-                {
-                    directCollisions.Add(node.Hits[0].point);
-                }
-                continue;
-            }
-            if (node.Hits.Length == 0)
-            {
-                Vector3 point = node.End;
-                options.Add(point);
 
-                movementDifficulty.Add(CalculateReachingDifficulty(selfPos, point));
-
-                float totalDist = Vector3.Distance(selfPos, point) + Vector3.Distance(point, _destinationPosListener);
-                distance.Add(totalDist);
-            }
-        }
-        if (directCollisions.Count > 0)
-        {
-            int randIndex = Random.Range(0, directCollisions.Count - 1);
-            _targetPositionField.Value = directCollisions[randIndex];
-            return;
+            Vector3 farthestPoint = GetFarthestReachablePoint(node);
+            options.Add(farthestPoint);
+            float value = EstimatePointValue(farthestPoint);
+            values.Add(value);
         }
         if (options.Count == 0)
         {
-            _targetPositionField.Value = selfPos;
+            _targetPositionField.Value = _gameObject.transform.position;
             return;
         }
 
-        float minMovementDifficulty = movementDifficulty.Min(),
-            maxMovementDifficulty = movementDifficulty.Max();
-
-        float minDistance = distance.Min(),
-            maxDistance = distance.Max(),
-            distanceSpan = maxDistance - minDistance;
-
         Vector3 bestOption = options[0];
-        float bestVal = movementDifficulty[0] * _difficultyCoef
-            + (distance[0] - minDistance) / distanceSpan * _distanceCoef;
+        float bestVal = values[0];
 
         for (int i = 1; i < options.Count; i++)
         {
-            float candidateVal = movementDifficulty[i] * _difficultyCoef
-            + (distance[i] - minDistance) / distanceSpan * _distanceCoef;
-
-            if (candidateVal < bestVal)
+            if (values[i] > bestVal)
             {
-                bestVal = candidateVal;
+                bestVal = values[i];
                 bestOption = options[i];
             }
         }

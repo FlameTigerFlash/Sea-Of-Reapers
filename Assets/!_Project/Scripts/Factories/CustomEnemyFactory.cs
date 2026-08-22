@@ -3,30 +3,36 @@ using Character.Enemy;
 using UnityEngine;
 using Zenject;
 
-public class CustomEnemyFactory : IFactory<Vector3, Quaternion, EnemyContextHandler>
+public class CustomEnemyFactory : IFactory<EnemyTypes, Vector3, Quaternion, EnemyContextHandler>
 {
     private DiContainer _container;
     private MapLocator _mapLocator;
-    private GameObject _enemyPrefab;
+    private EnemyPrefabsConfig _prefabsConfig;
 
     [Inject]
-    public CustomEnemyFactory(DiContainer container, MapLocator locator, GameObject enemyPrefab)
+    public CustomEnemyFactory(DiContainer container, MapLocator locator, EnemyPrefabsConfig prefabsConfig)
     {
         _container = container;
-        _enemyPrefab = enemyPrefab;
+        _prefabsConfig = prefabsConfig;
         _mapLocator = locator;
     }
 
-    public EnemyContextHandler Create(Vector3 position, Quaternion rotation)
+    public EnemyContextHandler Create(EnemyTypes enemyType, Vector3 position, Quaternion rotation)
     {
+        if (!_prefabsConfig.EnemyPrefabs.ContainsKey(enemyType))
+        {
+            Debug.LogError($"Enemy type: {enemyType} does not provide a prefab to spawn.");
+        }
+        GameObject enemyPrefab = _prefabsConfig.EnemyPrefabs[enemyType];
+
         EnemyContextHandler contextHandler = null;
         if (_mapLocator == null || _mapLocator.EnemiesFolder == null)
         {
-            contextHandler = _container.InstantiatePrefabForComponent<EnemyContextHandler>(_enemyPrefab, position, rotation, null);
+            contextHandler = _container.InstantiatePrefabForComponent<EnemyContextHandler>(enemyPrefab, position, rotation, null);
         }
         else
         {
-            contextHandler = _container.InstantiatePrefabForComponent<EnemyContextHandler>(_enemyPrefab, position, rotation, _mapLocator.EnemiesFolder);
+            contextHandler = _container.InstantiatePrefabForComponent<EnemyContextHandler>(enemyPrefab, position, rotation, _mapLocator.EnemiesFolder);
         }
 
         if (_mapLocator != null)

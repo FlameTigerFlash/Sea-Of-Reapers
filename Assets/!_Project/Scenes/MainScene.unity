@@ -1462,7 +1462,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Zenject::Zenject.SceneContext
-  _scriptableObjectInstallers: []
+  _scriptableObjectInstallers:
+  - {fileID: 11400000, guid: 7a067b5feafb81745b7857ad6a609513, type: 2}
   _monoInstallers:
   - {fileID: 2742002357925440881}
   - {fileID: 667309616}
@@ -3858,7 +3859,7 @@ PrefabInstance:
       objectReference: {fileID: 860780969}
     - target: {fileID: 1539468505772751936, guid: 73d3018204bf90249bc98d75889b066a, type: 3}
       propertyPath: m_VersionIndex
-      value: 3180
+      value: 3183
       objectReference: {fileID: 0}
     - target: {fileID: 2466299567175310482, guid: 73d3018204bf90249bc98d75889b066a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3946,7 +3947,7 @@ PrefabInstance:
       objectReference: {fileID: 1865598089}
     - target: {fileID: 6587123912998298372, guid: 73d3018204bf90249bc98d75889b066a, type: 3}
       propertyPath: m_VersionIndex
-      value: 11018
+      value: 11021
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92a72684958c41845adbf4134e7d52dc, type: 3}
-  m_Name: DefaultWavesConfig
-  m_EditorClassIdentifier: Assembly-CSharp::WavesConfig
-  <EnemiesCount>k__BackingField: 010000000200000003000000
+  m_Script: {fileID: 11500000, guid: a79cc8305b099af429f6fd0a1be56818, type: 3}
+  m_Name: DefaultConfigInstaller
+  m_EditorClassIdentifier: Assembly-CSharp::ConfigInstaller
+  _enemyPrefabsConfig: {fileID: 11400000, guid: 8b2f4eb2570e238488bd15d5e820d815, type: 2}

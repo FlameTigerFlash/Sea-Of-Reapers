@@ -451,7 +451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterHP
   _maxHP: 10
-  _initialHp: 5
+  _initialHp: 10
 --- !u!114 &1132238385542079688
 MonoBehaviour:
   m_ObjectHideFlags: 0
